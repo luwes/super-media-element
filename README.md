@@ -38,7 +38,7 @@ class MyVideoElement extends SuperVideoElement {
     await Promise.resolve();
 
     // code to load a video element from a script
-    // example: https://github.com/luwes/jwplayer-video-element/blob/2722f0a9bd907fc0245b1e824e8bcb266f20651a/src/jwplayer-video-element.js#L49-L69
+    // example: https://github.com/luwes/jwplayer-video-element/blob/main/src/jwplayer-video-element.js#L49-L69
 
     this.loadResolve();
   }
