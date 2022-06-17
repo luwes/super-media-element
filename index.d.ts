@@ -1,7 +1,7 @@
 
 type Constructor = new (...args: any[]) => {};
 
-export function SuperMediaMixin<TBase extends Constructor>(Base: TBase);
+export function SuperMediaMixin<TBase extends Constructor>(Base: TBase): any;
 
 export class SuperAudioElement extends HTMLAudioElement implements HTMLAudioElement {
   static readonly observedAttributes: string[];

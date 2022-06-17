@@ -96,17 +96,29 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
         const type = typeof nativeElTest[prop];
         if (type == 'function') {
           // Function
-          this.prototype[prop] = async function () {
+          this.prototype[prop] = function (...args) {
             this.#init();
-            if (this.loadComplete && !this.isLoaded) await this.loadComplete;
-            return this.nativeEl[prop].apply(this.nativeEl, arguments);
+
+            const fn = () => {
+              if (this.call) return this.call(prop, ...args);
+              return this.nativeEl[prop].apply(this.nativeEl, args);
+            };
+
+            if (this.loadComplete && !this.isLoaded) {
+              return this.loadComplete.then(fn);
+            }
+            return fn();
           };
         } else {
           // Getter
           let config = {
             get() {
               this.#init();
-              return this.nativeEl?.[prop] ?? this.#standinEl[prop];
+              return (
+                this.get?.(prop) ??
+                this.nativeEl?.[prop] ??
+                this.#standinEl[prop]
+              );
             },
           };
 
@@ -115,6 +127,10 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
             config.set = async function (val) {
               this.#init();
               if (this.loadComplete && !this.isLoaded) await this.loadComplete;
+              if (this.set) {
+                this.set(prop, val);
+                return;
+              }
               this.nativeEl[prop] = val;
             };
           }
@@ -174,6 +190,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
         this.#standinEl[name] = dummyEl[name];
       });
 
+      // unload dummy video element
       dummyEl.removeAttribute('src');
       dummyEl.load();
     }
