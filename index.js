@@ -246,7 +246,11 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
               return;
             }
             // Filter out non-media events.
-            if (!['Event', 'CustomEvent'].includes(evt.constructor.name)) {
+            if (
+              !['Event', 'CustomEvent', 'PictureInPictureEvent'].includes(
+                evt.constructor.name
+              )
+            ) {
               return;
             }
             this.dispatchEvent(
