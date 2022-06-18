@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/luwes/super-media-element/compare/v0.2.0...v0.2.1) (2022-06-18)
+
+
+### Bug Fixes
+
+* add types to pkg ([dca86f3](https://github.com/luwes/super-media-element/commit/dca86f39adb844b18b295da408e1c9425942d2ed))
+
+
+
 # [0.2.0](https://github.com/luwes/super-media-element/compare/v0.1.1...v0.2.0) (2022-06-18)
 
 
