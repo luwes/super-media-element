@@ -74,5 +74,6 @@ export { MyVideoElement };
 - [`<wistia-video>`](https://github.com/luwes/wistia-video-element) A web component for the Wistia player.
 - [`<jwplayer-video>`](https://github.com/luwes/jwplayer-video-element) A web component for the JW player.
 - [`<hls-video>`](https://github.com/muxinc/hls-video-element) A web component for playing HTTP Live Streaming (HLS) videos.
+- [`<videojs-video>`](https://github.com/luwes/videojs-video-element) A web component for Video.js.
 - [`castable-video`](https://github.com/muxinc/castable-video) Cast your video element to the big screen with ease!
 - [`<mux-player>`](https://github.com/muxinc/elements/tree/main/packages/mux-player) The official Mux-flavored video player web component.

@@ -14,7 +14,6 @@ export default {
             <super-video
               id="superVideo"
               muted
-              autoplay
               src="http://stream.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/low.mp4"
             ></super-media>
           </body>
@@ -33,7 +32,6 @@ export default {
             <super-video
               id="superVideo"
               muted
-              autoplay
               src="http://stream.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/low.mp4"
             ></super-media>
           </body>

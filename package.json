@@ -20,14 +20,13 @@
     "pretest": "esbuild index.js --target=es2019 --bundle --outdir=dist",
     "test": "web-test-runner --config test/web-test-runner.config.js",
     "dev": "esbuild index.js --bundle --outdir=dist --servedir=.",
-    "build": "rm -rf dist && esbuild index.js --target=es2019 --format=esm --bundle --minify --outdir=dist"
+    "build": "esbuild index.js --target=es2019 --format=esm --bundle --minify --outdir=dist"
   },
   "devDependencies": {
     "@open-wc/testing": "^3.1.5",
     "@web/test-runner": "^0.13.28",
     "esbuild": "^0.14.41",
     "eslint": "^8.17.0",
-    "np": "^7.5.0",
     "prettier": "^2.6.2"
   },
   "prettier": {
