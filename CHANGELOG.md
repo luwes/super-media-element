@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/luwes/super-media-element/compare/v0.2.1...v0.3.0) (2022-07-03)
+
+
+### Features
+
+* add possibility to set nativeEl ([278d922](https://github.com/luwes/super-media-element/commit/278d92270cc44b7aa9e44f60b42cbbf4ac6994f7))
+
+
+
 ## [0.2.1](https://github.com/luwes/super-media-element/compare/v0.2.0...v0.2.1) (2022-06-18)
 
 
