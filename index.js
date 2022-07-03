@@ -143,6 +143,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
     #isInit;
     #loadComplete;
     #isLoaded = false;
+    #nativeEl;
     #standinEl;
 
     constructor() {
@@ -176,7 +177,11 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
     }
 
     get nativeEl() {
-      return this.shadowRoot.querySelector(tag);
+      return this.#nativeEl ?? this.shadowRoot.querySelector(tag);
+    }
+
+    set nativeEl(val) {
+      this.#nativeEl = val;
     }
 
     #initStandinEl() {
@@ -231,7 +236,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
               childMap.set(el, clone);
             }
             if (this.loadComplete && !this.isLoaded) await this.loadComplete;
-            this.nativeEl.append(clone);
+            this.nativeEl.append?.(clone);
           });
         removeNativeChildren.forEach((el) => el.remove());
       });
@@ -325,12 +330,12 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
         // When this is the original Custom Element, or the subclass doesn't
         // have a matching prop, pass it through.
         if (newValue === null) {
-          this.nativeEl.removeAttribute(attrName);
+          this.nativeEl.removeAttribute?.(attrName);
         } else {
           // Ignore a few that don't need to be passed through just in case
           // it creates unexpected behavior.
           if (['id', 'class'].indexOf(attrName) === -1) {
-            this.nativeEl.setAttribute(attrName, newValue);
+            this.nativeEl.setAttribute?.(attrName, newValue);
           }
         }
       }
