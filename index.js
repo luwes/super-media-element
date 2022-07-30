@@ -10,7 +10,7 @@
 
 const styles = `
   :host {
-    display: inline-block;
+    display: inline-grid;
     line-height: 0;
     width: auto;
     height: auto;
@@ -18,6 +18,8 @@ const styles = `
 
   video,
   audio {
+    grid-column: 1;
+    grid-row: 1;
     max-width: 100%;
     max-height: 100%;
     min-width: 100%;
@@ -334,7 +336,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
         } else {
           // Ignore a few that don't need to be passed through just in case
           // it creates unexpected behavior.
-          if (['id', 'class'].indexOf(attrName) === -1) {
+          if (!['id', 'class'].includes(attrName)) {
             this.nativeEl.setAttribute?.(attrName, newValue);
           }
         }
