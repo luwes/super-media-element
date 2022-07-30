@@ -1,3 +1,12 @@
+## [0.3.1](https://github.com/luwes/super-media-element/compare/v0.3.0...v0.3.1) (2022-07-30)
+
+
+### Bug Fixes
+
+* use display grid to stack video and audio els ([f38b73e](https://github.com/luwes/super-media-element/commit/f38b73e6ad9dc9170df66aa2aa122418022a0180))
+
+
+
 # [0.3.0](https://github.com/luwes/super-media-element/compare/v0.2.1...v0.3.0) (2022-07-03)
 
 
