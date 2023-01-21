@@ -3,12 +3,10 @@
   "version": "0.3.1",
   "description": "Helps you create a custom element w/ a HTMLMediaElement API.",
   "type": "module",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "main": "super-media-element.js",
+  "types": "super-media-element.d.ts",
   "files": [
-    "index.d.ts",
-    "src",
-    "dist"
+    "super-media-element.d.ts"
   ],
   "repository": "luwes/super-media-element",
   "author": "Wesley Luyten <me@wesleyluyten.com> (https://wesleyluyten.com)",
@@ -18,10 +16,9 @@
     "url": "https://github.com/luwes/super-media-element/issues"
   },
   "scripts": {
-    "pretest": "esbuild index.js --target=es2019 --bundle --outdir=dist",
+    "pretest": "esbuild super-media-element.js --format=iife --outdir=dist",
     "test": "web-test-runner --config test/web-test-runner.config.js",
-    "dev": "esbuild index.js --bundle --outdir=dist --servedir=.",
-    "build": "esbuild index.js --target=es2019 --format=esm --bundle --minify --outdir=dist"
+    "dev": "npx serve ."
   },
   "devDependencies": {
     "@open-wc/testing": "^3.1.5",

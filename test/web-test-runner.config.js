@@ -7,7 +7,7 @@ export default {
       testRunnerHtml: testFramework =>
         `<html>
           <head>
-            <script src="./dist/index.js"></script>
+            <script src="./dist/super-media-element.js"></script>
             <script type="module" src="${testFramework}"></script>
           </head>
           <body>
@@ -25,7 +25,7 @@ export default {
       testRunnerHtml: testFramework =>
         `<html>
           <head>
-            <script type="module" src="./index.js"></script>
+            <script type="module" src="./super-media-element.js"></script>
             <script type="module" src="${testFramework}"></script>
           </head>
           <body>
