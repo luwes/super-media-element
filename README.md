@@ -59,7 +59,6 @@ class MyVideoElement extends SuperVideoElement {
 
 if (!globalThis.customElements.get('my-video')) {
   globalThis.customElements.define('my-video', MyVideoElement);
-  globalThis.MyVideoElement = MyVideoElement;
 }
 
 export { MyVideoElement };

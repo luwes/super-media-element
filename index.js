@@ -374,11 +374,9 @@ function getNativeElProps(nativeElTest) {
 export const SuperVideoElement = SuperMediaMixin(HTMLElement, { tag: 'video' });
 if (!globalThis.customElements.get('super-video')) {
   globalThis.customElements.define('super-video', SuperVideoElement);
-  globalThis.SuperVideoElement = SuperVideoElement;
 }
 
 export const SuperAudioElement = SuperMediaMixin(HTMLElement, { tag: 'audio' });
 if (!globalThis.customElements.get('super-audio')) {
   globalThis.customElements.define('super-audio', SuperAudioElement);
-  globalThis.SuperAudioElement = SuperAudioElement;
 }

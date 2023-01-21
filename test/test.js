@@ -2,6 +2,8 @@ import { fixture, assert, aTimeout } from '@open-wc/testing';
 // The super-video-element JS import is defined in web-test-runner.config.js
 // for both an eager and lazy custom element upgrade.
 
+globalThis.SuperVideoElement = globalThis.customElements.get('super-video');
+
 describe('<super-video>', () => {
   it('is an instance of SuperVideoElement and HTMLElement', async function () {
     const superVideo = await fixture(`<super-video></super-video>`);
