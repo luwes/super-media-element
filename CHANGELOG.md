@@ -1,3 +1,13 @@
+# [0.4.0](https://github.com/luwes/super-media-element/compare/v0.3.1...v0.4.0) (2023-01-21)
+
+
+### Bug Fixes
+
+* make build-less ESM bundle ([e28859c](https://github.com/luwes/super-media-element/commit/e28859c7f42ca69005ddf2e353fea02ef5d6a3c8))
+* remove globals ([21382b2](https://github.com/luwes/super-media-element/commit/21382b2d4ace9e61ac385a69c3144bdbded6b34d))
+
+
+
 ## [0.3.1](https://github.com/luwes/super-media-element/compare/v0.3.0...v0.3.1) (2022-07-30)
 
 
