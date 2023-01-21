@@ -1,4 +1,4 @@
-import { SuperVideoElement } from './super-media-element.js';
+import { SuperVideoElement } from '../super-media-element.js';
 
 class MyVideoElement extends SuperVideoElement {
   constructor() {
