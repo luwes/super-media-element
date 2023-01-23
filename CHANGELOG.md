@@ -1,3 +1,12 @@
+## [0.4.1](https://github.com/luwes/super-media-element/compare/v0.4.0...v0.4.1) (2023-01-23)
+
+
+### Bug Fixes
+
+* remove inline-grid, caused bug with track el ([f246e4c](https://github.com/luwes/super-media-element/commit/f246e4c678cc9f248ef48ca3e7dc8b83d71fc774))
+
+
+
 # [0.4.0](https://github.com/luwes/super-media-element/compare/v0.3.1...v0.4.0) (2023-01-21)
 
 
