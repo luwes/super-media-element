@@ -10,7 +10,7 @@
 
 const styles = `
   :host {
-    display: inline-grid;
+    display: inline-block;
     line-height: 0;
     width: auto;
     height: auto;
@@ -18,8 +18,6 @@ const styles = `
 
   video,
   audio {
-    grid-column: 1;
-    grid-row: 1;
     max-width: 100%;
     max-height: 100%;
     min-width: 100%;
