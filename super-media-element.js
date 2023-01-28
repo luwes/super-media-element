@@ -52,6 +52,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
     .map((name) => name.slice(2));
 
   return class SuperMedia extends superclass {
+    static template = template;
     static #isDefined;
 
     // observedAttributes is required to trigger attributeChangedCallback
@@ -151,7 +152,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
 
       if (!this.shadowRoot) {
         this.attachShadow({ mode: 'open' });
-        this.shadowRoot.append(template.content.cloneNode(true));
+        this.shadowRoot.append(this.constructor.template.content.cloneNode(true));
       }
 
       // If the custom element is defined before the custom element's HTML is parsed
