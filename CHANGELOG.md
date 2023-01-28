@@ -1,3 +1,22 @@
+## [0.4.2](https://github.com/luwes/super-media-element/compare/v0.2.0...v0.4.2) (2023-01-28)
+
+
+### Bug Fixes
+
+* add types to pkg ([d1bc534](https://github.com/luwes/super-media-element/commit/d1bc534d3360835b6ea0e52d82eebdb53ef91520))
+* make build-less ESM bundle ([b72efee](https://github.com/luwes/super-media-element/commit/b72efee84fa9770f74bf005412b44a1ad9f799df))
+* make template overridable ([5e3ca1f](https://github.com/luwes/super-media-element/commit/5e3ca1ff7a860ca0c19d5acb1521ab4747f35fe3))
+* remove globals ([63e9610](https://github.com/luwes/super-media-element/commit/63e9610443a41f20a7121d14311bafb277a6cf0f))
+* remove inline-grid, caused bug with track el ([d5fd407](https://github.com/luwes/super-media-element/commit/d5fd407d92e230efd0d4a12951736d65e8dfe8a4))
+* use display grid to stack video and audio els ([af5b6bf](https://github.com/luwes/super-media-element/commit/af5b6bf6a266582e1685647e2f236bd3e76f23d2))
+
+
+### Features
+
+* add possibility to set nativeEl ([1e89390](https://github.com/luwes/super-media-element/commit/1e893904b269c8528861511ff6f4c77be64445cd))
+
+
+
 ## [0.4.1](https://github.com/luwes/super-media-element/compare/v0.4.0...v0.4.1) (2023-01-23)
 
 
