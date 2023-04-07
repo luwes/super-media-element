@@ -8,6 +8,38 @@
  * like API's. e.g. video players.
  */
 
+// The onevent like props are weirdly set on the HTMLElement prototype with other
+// generic events making it impossible to pick these specific to HTMLMediaElement.
+const Events = [
+  'abort',
+  'canplay',
+  'canplaythrough',
+  'durationchange',
+  'emptied',
+  'encrypted',
+  'ended',
+  'error',
+  'loadeddata',
+  'loadedmetadata',
+  'loadstart',
+  'pause',
+  'play',
+  'playing',
+  'progress',
+  'ratechange',
+  'seeked',
+  'seeking',
+  'stalled',
+  'suspend',
+  'timeupdate',
+  'volumechange',
+  'waiting',
+  'waitingforkey',
+  'resize',
+  'enterpictureinpicture',
+  'leavepictureinpicture',
+];
+
 const styles = `
   :host {
     display: inline-block;
@@ -43,16 +75,9 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
   const nativeElTest = document.createElement(tag, { is });
   const nativeElProps = getNativeElProps(nativeElTest);
 
-  // Most of the media events are set on the HTMLElement prototype.
-  const AllEvents = [
-    ...nativeElProps,
-    ...Object.getOwnPropertyNames(HTMLElement.prototype),
-  ]
-    .filter((name) => name.startsWith('on'))
-    .map((name) => name.slice(2));
-
   return class SuperMedia extends superclass {
     static template = template;
+    static Events = Events;
     static #isDefined;
 
     // observedAttributes is required to trigger attributeChangedCallback
@@ -61,29 +86,21 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
     static get observedAttributes() {
       SuperMedia.#define();
 
-      // Instead of manually creating a list of all observed attributes,
-      // observe any getter/setter prop name (lowercase)
-      let attrs = [];
-      Object.getOwnPropertyNames(this.prototype).forEach((propName) => {
-        // Non-func properties throw errors because it's not an instance
-        let isFunc = false;
-        try {
-          if (typeof this.prototype[propName] === 'function') isFunc = true;
-        } catch (e) {
-          //
-        }
-        // Exclude functions and constants
-        if (!isFunc && propName !== propName.toUpperCase()) {
-          attrs.push(propName.toLowerCase());
-        }
-      });
-
-      // Include any attributes from the super class (recursive)
-      const supAttrs = Object.getPrototypeOf(this).observedAttributes;
       // Include any attributes from the custom built-in.
       const natAttrs = Object.getPrototypeOf(nativeElTest).observedAttributes;
-
-      return [...(natAttrs ?? []), ...attrs, ...(supAttrs ?? [])];
+      const attrs = [
+        ...(natAttrs ?? []),
+        'autoplay',
+        'controls',
+        'crossorigin',
+        'loop',
+        'muted',
+        'playsinline',
+        'poster',
+        'preload',
+        'src',
+      ];
+      return attrs;
     }
 
     static #define() {
@@ -115,11 +132,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
           let config = {
             get() {
               this.#init();
-              return (
-                this.get?.(prop) ??
-                this.nativeEl?.[prop] ??
-                this.#standinEl[prop]
-              );
+              return this.get?.(prop) ?? this.nativeEl?.[prop] ?? this.#standinEl[prop];
             },
           };
 
@@ -187,6 +200,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
 
     #initStandinEl() {
       const dummyEl = document.createElement(tag, { is });
+
       [...this.attributes].forEach(({ name, value }) => {
         dummyEl.setAttribute(name, value);
       });
@@ -244,27 +258,11 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
 
       // The video events are dispatched on the SuperMediaElement instance.
       // This makes it possible to add event listeners before the element is upgraded.
-      AllEvents.forEach((type) => {
-        this.shadowRoot.addEventListener?.(
-          type,
-          (evt) => {
-            if (evt.target !== this.nativeEl) {
-              return;
-            }
-            // Filter out non-media events.
-            if (
-              !['Event', 'CustomEvent', 'PictureInPictureEvent'].includes(
-                evt.constructor.name
-              )
-            ) {
-              return;
-            }
-            this.dispatchEvent(
-              new CustomEvent(evt.type, { detail: evt.detail })
-            );
-          },
-          true
-        );
+      Events.forEach((type) => {
+        this.shadowRoot.addEventListener?.(type, (evt) => {
+          if (evt.target !== this.nativeEl) return;
+          this.dispatchEvent(new CustomEvent(evt.type, { detail: evt.detail }));
+        }, true);
       });
 
       // Initialize all the attribute properties

@@ -167,6 +167,45 @@ test('has HTMLVideoElement like properties', async function (t) {
   });
 });
 
+test('has HTMLVideoElement like events', async function (t) {
+  const superVideo = await fixture(`<super-video></super-video>`);
+  const superVideoElementEvents = [
+    'abort',
+    'canplay',
+    'canplaythrough',
+    'durationchange',
+    'emptied',
+    'encrypted',
+    'ended',
+    'error',
+    'loadeddata',
+    'loadedmetadata',
+    'loadstart',
+    'pause',
+    'play',
+    'playing',
+    'progress',
+    'ratechange',
+    'seeked',
+    'seeking',
+    'stalled',
+    'suspend',
+    'timeupdate',
+    'volumechange',
+    'waiting',
+    'waitingforkey',
+    'resize',
+    'enterpictureinpicture',
+    'leavepictureinpicture',
+  ];
+
+  superVideoElementEvents.forEach((event) => {
+    t.ok(
+      superVideo.constructor.Events.includes(event),
+      `${event} exists in SuperVideoElement.Events`
+    );
+  });
+});
 
 async function fixture(html) {
   const template = document.createElement('template');
