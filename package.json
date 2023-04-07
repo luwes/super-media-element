@@ -16,16 +16,14 @@
     "url": "https://github.com/luwes/super-media-element/issues"
   },
   "scripts": {
-    "lint": "eslint *.js",
+    "lint": "npx eslint *.js",
     "pretest": "esbuild super-media-element.js --format=iife --outdir=dist",
-    "test": "web-test-runner --config test/web-test-runner.config.js",
-    "dev": "npx serve ."
+    "test": "wet run test/lazy.html test/eager.html",
+    "dev": "wet serve --cors --redirect :example/"
   },
   "devDependencies": {
-    "@open-wc/testing": "^3.1.7",
-    "@web/test-runner": "^0.15.0",
     "esbuild": "^0.17.3",
-    "eslint": "^8.32.0"
+    "wet-run": "^0.0.8"
   },
   "eslintConfig": {
     "root": true,
