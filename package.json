@@ -1,6 +1,6 @@
 {
   "name": "super-media-element",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Helps you create a custom element w/ a HTMLMediaElement API.",
   "type": "module",
   "main": "super-media-element.js",
