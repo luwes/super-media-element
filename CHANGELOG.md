@@ -1,3 +1,13 @@
+# [1.0.0](https://github.com/luwes/super-media-element/compare/v0.4.2...v1.0.0) (2023-04-08)
+
+
+### Bug Fixes
+
+* simplify attributeChangedCallback ([5e861a8](https://github.com/luwes/super-media-element/commit/5e861a8f9874a79ab06f8883b71ee391a3172093))
+* simplify event & observed attrs logic ([762d9f9](https://github.com/luwes/super-media-element/commit/762d9f9b67def2ccd183741c32e724e40ff4642f))
+
+
+
 ## [0.4.2](https://github.com/luwes/super-media-element/compare/v0.2.0...v0.4.2) (2023-01-28)
 
 
