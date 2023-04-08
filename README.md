@@ -1,5 +1,8 @@
 # Super Media Element
 
+[![Version](https://img.shields.io/npm/v/super-media-element?style=flat-square)](https://www.npmjs.com/package/super-media-element) 
+[![Badge size](https://img.badgesize.io/https://cdn.jsdelivr.net/npm/super-media-element/+esm?compression=gzip&label=gzip&style=flat-square)](https://cdn.jsdelivr.net/npm/super-media-element/+esm)
+
 A custom element that helps save alienated player API's to bring back their true inner [HTMLMediaElement API](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement), or to extend a native media element like `<audio>` or `<video>`.
 
 ## Usage
