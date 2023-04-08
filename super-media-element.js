@@ -69,9 +69,7 @@ template.innerHTML = `
  * @see https://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/
  */
 export const SuperMediaMixin = (superclass, { tag, is }) => {
-  // Can't check typeof directly on element prototypes without
-  // throwing Illegal Invocation errors, so creating an element
-  // to check on instead.
+
   const nativeElTest = document.createElement(tag, { is });
   const nativeElProps = getNativeElProps(nativeElTest);
 
@@ -80,18 +78,20 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
     static Events = Events;
     static #isDefined;
 
-    // observedAttributes is required to trigger attributeChangedCallback
-    // for any attributes on the custom element.
-    // Attributes need to be the lowercase word, e.g. crossorigin, not crossOrigin
     static get observedAttributes() {
       SuperMedia.#define();
 
       // Include any attributes from the custom built-in.
       const natAttrs = Object.getPrototypeOf(nativeElTest).observedAttributes;
+
       const attrs = [
         ...(natAttrs ?? []),
+        'autopictureinpicture',
+        'disablepictureinpicture',
+        'disableremoteplayback',
         'autoplay',
         'controls',
+        'controlslist',
         'crossorigin',
         'loop',
         'muted',
@@ -198,32 +198,6 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       this.#nativeEl = val;
     }
 
-    #initStandinEl() {
-      const dummyEl = document.createElement(tag, { is });
-
-      [...this.attributes].forEach(({ name, value }) => {
-        dummyEl.setAttribute(name, value);
-      });
-
-      this.#standinEl = {};
-      getNativeElProps(dummyEl).forEach((name) => {
-        this.#standinEl[name] = dummyEl[name];
-      });
-
-      // unload dummy video element
-      dummyEl.removeAttribute('src');
-      dummyEl.load();
-    }
-
-    async #initNativeEl() {
-      if (this.loadComplete && !this.isLoaded) await this.loadComplete;
-
-      // If there is no nativeEl by now, create it our bloody selves.
-      if (!this.nativeEl) {
-        this.shadowRoot.append(document.createElement(tag, { is }));
-      }
-    }
-
     async #init() {
       if (this.#isInit) return;
       this.#isInit = true;
@@ -264,78 +238,57 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
           this.dispatchEvent(new CustomEvent(evt.type, { detail: evt.detail }));
         }, true);
       });
+    }
 
-      // Initialize all the attribute properties
-      // This is required before attributeChangedCallback is called after construction
-      // so the initial state of all the attributes are forwarded to the native element.
-      // Don't call attributeChangedCallback directly here because the extending class
-      // could have overridden attributeChangedCallback leading to unexpected results.
-      [...this.attributes].forEach((attrNode) => {
-        this.#forwardAttribute(attrNode.name, null, attrNode.value);
+    #initStandinEl() {
+      const dummyEl = document.createElement(tag, { is });
+
+      [...this.attributes].forEach(({ name, value }) => {
+        dummyEl.setAttribute(name, value);
       });
 
-      // Neither Chrome or Firefox support setting the muted attribute
-      // after using document.createElement.
-      // One way to get around this would be to build the native tag as a string.
-      // But just fixing it manually for now.
-      // Apparently this may also be an issue with <input checked> for buttons
+      this.#standinEl = {};
+      getNativeElProps(dummyEl).forEach((name) => {
+        this.#standinEl[name] = dummyEl[name];
+      });
+
+      // unload dummy video element
+      dummyEl.removeAttribute('src');
+      dummyEl.load();
+    }
+
+    async #initNativeEl() {
       if (this.loadComplete && !this.isLoaded) await this.loadComplete;
-      if (this.nativeEl.defaultMuted) {
-        this.muted = true;
+
+      // If there is no nativeEl by now, create it our bloody selves.
+      if (!this.nativeEl) {
+        // Neither Chrome or Firefox support setting the muted attribute
+        // after using document.createElement.
+        // Get around this by building the native tag as a string.
+        const muted = this.hasAttribute('muted') ? ' muted' : '';
+
+        const tpl = document.createElement('template');
+        tpl.innerHTML = `<${tag}${is ? ` is="${is}"` : ''}${muted}></${tag}>`;
+        this.shadowRoot.append(tpl.content);
       }
     }
 
-    async attributeChangedCallback(attrName, oldValue, newValue) {
+    attributeChangedCallback(attrName, oldValue, newValue) {
       // Initialize right after construction when the attributes become available.
-      if (!this.#isInit) {
-        await this.#init();
-      }
-
+      this.#init();
       this.#forwardAttribute(attrName, oldValue, newValue);
     }
 
-    // We need to handle sub-class custom attributes differently from
-    // attrs meant to be passed to the internal native el.
     async #forwardAttribute(attrName, oldValue, newValue) {
       if (this.loadComplete && !this.isLoaded) await this.loadComplete;
 
-      // Find the matching prop for custom attributes
-      const ownProps = Object.getOwnPropertyNames(Object.getPrototypeOf(this));
-      const propName = ownProps.find(
-        (name) => name.toLowerCase() === attrName.toLowerCase()
-      );
-
-      // Check if this is the original custom native element or a subclass
-      const isBaseElement =
-        Object.getPrototypeOf(this.constructor).name === 'HTMLElement';
-
-      // If this is a subclass custom attribute we want to set the
-      // matching property on the subclass
-      if (propName && !isBaseElement) {
-        // Boolean props should never start as null
-        if (typeof this[propName] == 'boolean') {
-          // null is returned when attributes are removed i.e. boolean attrs
-          if (newValue === null) {
-            this[propName] = false;
-          } else {
-            // The new value might be an empty string, which is still true
-            // for boolean attributes
-            this[propName] = true;
-          }
-        } else {
-          this[propName] = newValue;
-        }
+      if (newValue === null) {
+        this.nativeEl.removeAttribute?.(attrName);
       } else {
-        // When this is the original Custom Element, or the subclass doesn't
-        // have a matching prop, pass it through.
-        if (newValue === null) {
-          this.nativeEl.removeAttribute?.(attrName);
-        } else {
-          // Ignore a few that don't need to be passed through just in case
-          // it creates unexpected behavior.
-          if (!['id', 'class'].includes(attrName)) {
-            this.nativeEl.setAttribute?.(attrName, newValue);
-          }
+        // Ignore a few that don't need to be passed through just in case
+        // it creates unexpected behavior.
+        if (!['id', 'class'].includes(attrName)) {
+          this.nativeEl.setAttribute?.(attrName, newValue);
         }
       }
     }
