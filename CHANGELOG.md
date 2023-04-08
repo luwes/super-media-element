@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/luwes/super-media-element/compare/v1.1.0...v1.1.1) (2023-04-08)
+
+
+### Bug Fixes
+
+* revert 1.1 API, simplify load API ([65bfa98](https://github.com/luwes/super-media-element/commit/65bfa980c00716bf78abfa18dc2090c0203d48ce))
+
+
+
 # [1.1.0](https://github.com/luwes/super-media-element/compare/v1.0.0...v1.1.0) (2023-04-08)
 
 
