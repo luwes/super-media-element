@@ -107,6 +107,8 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       if (this.#isDefined) return;
       this.#isDefined = true;
 
+      const observedAttributes = this.observedAttributes;
+
       // Passthrough native el functions from the custom el to the native el
       nativeElProps.forEach((prop) => {
         if (prop in this.prototype) return;
@@ -132,6 +134,13 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
           let config = {
             get() {
               this.#init();
+
+              let attr = prop.toLowerCase();
+              if (observedAttributes.includes(attr)) {
+                const val = this.getAttribute(attr);
+                return val === null ? false : val === '' ? true : val;
+              }
+
               return this.get?.(prop) ?? this.nativeEl?.[prop] ?? this.#standinEl[prop];
             },
           };
@@ -140,11 +149,25 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
             // Setter (not a CONSTANT)
             config.set = async function (val) {
               this.#init();
-              if (this.loadComplete && !this.isLoaded) await this.loadComplete;
+
               if (this.set) {
+                if (this.loadComplete && !this.isLoaded) await this.loadComplete;
+
                 this.set(prop, val);
                 return;
               }
+
+              let attr = prop.toLowerCase();
+              if (observedAttributes.includes(attr)) {
+                if (val === true || val === false || val == null) {
+                  this.toggleAttribute(attr, Boolean(val));
+                } else {
+                  this.setAttribute(attr, val);
+                }
+                return;
+              }
+
+              if (this.loadComplete && !this.isLoaded) await this.loadComplete;
               this.nativeEl[prop] = val;
             };
           }
@@ -156,6 +179,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
 
     #isInit;
     #loadComplete;
+    #hasLoaded = false;
     #isLoaded = false;
     #nativeEl;
     #standinEl;
@@ -174,16 +198,29 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       // connectedCallback or accessing any properties.
     }
 
+    async loadStart() {
+      // The first time we use the Promise created in the constructor.
+      if (!this.loadComplete || this.#hasLoaded) {
+        this.loadComplete = new PublicPromise();
+      }
+      this.#hasLoaded = true;
+    }
+
+    loadEnd() {
+      this.loadComplete.resolve();
+      return this.loadComplete;
+    }
+
+    get loadComplete() {
+      return this.#loadComplete;
+    }
+
     set loadComplete(promise) {
       this.#isLoaded = false;
       this.#loadComplete = promise;
       promise.then(() => {
         this.#isLoaded = true;
       });
-    }
-
-    get loadComplete() {
-      return this.#loadComplete;
     }
 
     get isLoaded() {
@@ -196,6 +233,22 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
 
     set nativeEl(val) {
       this.#nativeEl = val;
+    }
+
+    get defaultMuted() {
+      return this.hasAttribute('muted');
+    }
+
+    set defaultMuted(val) {
+      this.toggleAttribute('muted', Boolean(val));
+    }
+
+    get src() {
+      return this.getAttribute('src');
+    }
+
+    set src(val) {
+      this.setAttribute('src', `${val}`);
     }
 
     async #init() {
@@ -319,6 +372,23 @@ function getNativeElProps(nativeElTest) {
   }
 
   return nativeElProps;
+}
+
+/**
+ * A utility to create Promises with convenient public resolve and reject methods.
+ * @return {Promise}
+ */
+class PublicPromise extends Promise {
+  constructor(executor = () => {}) {
+    let res, rej;
+    super((resolve, reject) => {
+      executor(resolve, reject);
+      res = resolve;
+      rej = reject;
+    });
+    this.resolve = res;
+    this.reject = rej;
+  }
 }
 
 export const SuperVideoElement = SuperMediaMixin(HTMLElement, { tag: 'video' });

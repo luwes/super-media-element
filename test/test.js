@@ -35,6 +35,44 @@ test('uses attributes for getters if nativeEl is not ready yet', async function 
   );
 });
 
+test('has default video reflecting props', async function (t) {
+  const superVideo = await fixture(
+    `<super-video></super-video>`
+  );
+
+  superVideo.src = 'http://stream.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/low.mp4';
+  t.equal(
+    superVideo.getAttribute('src'),
+    'http://stream.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/low.mp4',
+    'has src attribute'
+  );
+  t.equal(
+    superVideo.nativeEl.getAttribute('src'),
+    'http://stream.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/low.mp4',
+    'nativeEl has src attribute'
+  );
+
+  superVideo.preload = 'none';
+  t.equal(superVideo.getAttribute('preload'), 'none', 'has preload attribute');
+  t.equal(superVideo.nativeEl.getAttribute('preload'), 'none', 'nativeEl has preload attribute');
+
+  superVideo.defaultMuted = true;
+  t.ok(superVideo.hasAttribute('muted'), 'has muted attribute');
+  t.ok(superVideo.nativeEl.hasAttribute('muted'), 'nativeEl has muted attribute');
+
+  superVideo.loop = true;
+  t.ok(superVideo.hasAttribute('loop'), 'has loop attribute');
+  t.ok(superVideo.nativeEl.hasAttribute('loop'), 'nativeEl has loop attribute');
+
+  superVideo.autoplay = true;
+  t.ok(superVideo.hasAttribute('autoplay'), 'has autoplay attribute');
+  t.ok(superVideo.nativeEl.hasAttribute('autoplay'), 'nativeEl has autoplay attribute');
+
+  superVideo.controls = true;
+  t.ok(superVideo.hasAttribute('controls'), 'has controls attribute');
+  t.ok(superVideo.nativeEl.hasAttribute('controls'), 'nativeEl has controls attribute');
+});
+
 test('has a working muted attribute', async function (t) {
   const superVideo = window.superVideo;
 

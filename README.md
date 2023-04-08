@@ -13,13 +13,10 @@ import { SuperVideoElement } from 'super-media-element';
 class MyVideoElement extends SuperVideoElement {
   constructor() {
     super();
-
-    this.loadComplete = new Promise((resolve) => {
-      this.loadResolve = resolve;
-    });
+    this.loadStart();
   }
 
-  async attributeChangedCallback(attrName, oldValue, newValue) {
+  attributeChangedCallback(attrName, oldValue, newValue) {
     // This is required to come before the await for resolving loadComplete.
     if (attrName === 'src' && newValue) {
       this.load();
@@ -30,33 +27,17 @@ class MyVideoElement extends SuperVideoElement {
   }
 
   async load() {
-    if (this.hasLoaded) {
-      this.loadComplete = new Promise((resolve) => {
-        this.loadResolve = resolve;
-      });
-    }
-    this.hasLoaded = true;
-
-    // Wait 1 tick to allow other attributes to be set.
-    await Promise.resolve();
+    // Kick off load & wait 1 tick to allow other attributes to be set.
+    await this.loadStart();
 
     // code to load a video element from a script
-    // example: https://github.com/luwes/jwplayer-video-element/blob/main/src/jwplayer-video-element.js#L49-L69
+    // example: https://github.com/luwes/jwplayer-video-element/blob/main/jwplayer-video-element.js#L55-L75
 
-    this.loadResolve();
+    await this.loadEnd();
   }
 
   get nativeEl() {
     return this.querySelector('.loaded-video-element');
-  }
-
-  get src() {
-    return this.getAttribute('src');
-  }
-
-  set src(val) {
-    if (this.src == val) return;
-    this.setAttribute('src', val);
   }
 }
 
