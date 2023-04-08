@@ -258,6 +258,10 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       if (this.#isInit) return;
       this.#isInit = true;
 
+      nativeElProps.forEach((prop) => {
+        this.#upgradeProperty(prop);
+      });
+
       this.#initStandinEl();
       this.#initNativeEl();
 
@@ -290,9 +294,20 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       // This makes it possible to add event listeners before the element is upgraded.
       Events.forEach((type) => {
         this.shadowRoot.addEventListener?.(type, (evt) => {
+          if (evt.target !== this.nativeEl) return;
           this.dispatchEvent(new CustomEvent(evt.type, { detail: evt.detail }));
         }, true);
       });
+    }
+
+    #upgradeProperty(prop) {
+      if (Object.prototype.hasOwnProperty.call(this, prop)) {
+        const value = this[prop];
+        // Delete the set property from this instance.
+        delete this[prop];
+        // Set the value again via the (prototype) setter on this class.
+        this[prop] = value;
+      }
     }
 
     #initStandinEl() {
@@ -344,12 +359,12 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       if (this.#hasLoaded) this.loadComplete = new PublicPromise();
       this.#hasLoaded = true;
 
+      // Wait 1 tick to allow other attributes to be set.
+      await Promise.resolve();
       await this.load();
 
-      if (this.loadComplete) {
-        this.loadComplete.resolve();
-        await this.loadComplete;
-      }
+      this.loadComplete?.resolve();
+      await this.loadComplete;
     }
 
     async #forwardAttribute(attrName, oldValue, newValue) {
