@@ -1,3 +1,12 @@
+## [1.1.2](https://github.com/luwes/super-media-element/compare/v1.1.1...v1.1.2) (2023-04-08)
+
+
+### Bug Fixes
+
+* dup events & make props lazy ([124b463](https://github.com/luwes/super-media-element/commit/124b463b211aebf832d13f058cb1103df3b55228))
+
+
+
 ## [1.1.1](https://github.com/luwes/super-media-element/compare/v1.1.0...v1.1.1) (2023-04-08)
 
 
