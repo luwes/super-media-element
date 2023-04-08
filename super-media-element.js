@@ -74,8 +74,9 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
   const nativeElProps = getNativeElProps(nativeElTest);
 
   return class SuperMedia extends superclass {
-    static template = template;
     static Events = Events;
+    static template = template;
+    static skipAttributes = [];
     static #isDefined;
 
     static get observedAttributes() {
@@ -130,6 +131,8 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
             return fn();
           };
         } else {
+          // Some properties like src, preload, defaultMuted are handled manually.
+
           // Getter
           let config = {
             get() {
@@ -192,23 +195,15 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
         this.shadowRoot.append(this.constructor.template.content.cloneNode(true));
       }
 
+      // If a load method is provided in the child class create a load promise.
+      if (this.load !== SuperMedia.prototype.load) {
+        this.loadComplete = new PublicPromise();
+      }
+
       // If the custom element is defined before the custom element's HTML is parsed
       // no attributes will be available in the constructor (construction process).
       // Wait until initializing in the attributeChangedCallback or
       // connectedCallback or accessing any properties.
-    }
-
-    async loadStart() {
-      // The first time we use the Promise created in the constructor.
-      if (!this.loadComplete || this.#hasLoaded) {
-        this.loadComplete = new PublicPromise();
-      }
-      this.#hasLoaded = true;
-    }
-
-    loadEnd() {
-      this.loadComplete.resolve();
-      return this.loadComplete;
     }
 
     get loadComplete() {
@@ -251,6 +246,14 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       this.setAttribute('src', `${val}`);
     }
 
+    get preload() {
+      return this.getAttribute('preload') ?? 'metadata';
+    }
+
+    set preload(val) {
+      this.setAttribute('preload', `${val}`);
+    }
+
     async #init() {
       if (this.#isInit) return;
       this.#isInit = true;
@@ -287,7 +290,6 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       // This makes it possible to add event listeners before the element is upgraded.
       Events.forEach((type) => {
         this.shadowRoot.addEventListener?.(type, (evt) => {
-          if (evt.target !== this.nativeEl) return;
           this.dispatchEvent(new CustomEvent(evt.type, { detail: evt.detail }));
         }, true);
       });
@@ -329,20 +331,40 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
     attributeChangedCallback(attrName, oldValue, newValue) {
       // Initialize right after construction when the attributes become available.
       this.#init();
+
+      if (attrName === 'src' && newValue) {
+        this.#loadSrc();
+      }
+
       this.#forwardAttribute(attrName, oldValue, newValue);
+    }
+
+    async #loadSrc() {
+      // The first time we use the Promise created in the constructor.
+      if (this.#hasLoaded) this.loadComplete = new PublicPromise();
+      this.#hasLoaded = true;
+
+      await this.load();
+
+      if (this.loadComplete) {
+        this.loadComplete.resolve();
+        await this.loadComplete;
+      }
     }
 
     async #forwardAttribute(attrName, oldValue, newValue) {
       if (this.loadComplete && !this.isLoaded) await this.loadComplete;
 
+      // Ignore a few that don't need to be passed through just in case
+      // it creates unexpected behavior.
+      if (['id', 'class', ...this.constructor.skipAttributes].includes(attrName)) {
+        return;
+      }
+
       if (newValue === null) {
         this.nativeEl.removeAttribute?.(attrName);
       } else {
-        // Ignore a few that don't need to be passed through just in case
-        // it creates unexpected behavior.
-        if (!['id', 'class'].includes(attrName)) {
-          this.nativeEl.setAttribute?.(attrName, newValue);
-        }
+        this.nativeEl.setAttribute?.(attrName, newValue);
       }
     }
 

@@ -10,11 +10,10 @@ test('is an instance of SuperVideoElement and HTMLElement', async function (t) {
 
 test('uses attributes for getters if nativeEl is not ready yet', async function (t) {
   class MyVideoElement extends globalThis.SuperVideoElement {
-    constructor() {
-      super();
+    async load() {
       // This shows that the video like API can be delayed for players like
       // YouTube, Vimeo, Wistia, any player that requires an async load.
-      this.loadComplete = new Promise((resolve) => {
+      await new Promise((resolve) => {
         setTimeout(resolve, 100);
       });
     }

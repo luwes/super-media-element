@@ -3,7 +3,9 @@
 [![Version](https://img.shields.io/npm/v/super-media-element?style=flat-square)](https://www.npmjs.com/package/super-media-element) 
 [![Badge size](https://img.badgesize.io/https://cdn.jsdelivr.net/npm/super-media-element/+esm?compression=gzip&label=gzip&style=flat-square)](https://cdn.jsdelivr.net/npm/super-media-element/+esm)
 
-A custom element that helps save alienated player API's to bring back their true inner [HTMLMediaElement API](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement), or to extend a native media element like `<audio>` or `<video>`.
+A custom element that helps save alienated player API's in bringing back their true inner 
+[HTMLMediaElement API](https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement), 
+or to extend a native media element like `<audio>` or `<video>`.
 
 ## Usage
 
@@ -11,29 +13,29 @@ A custom element that helps save alienated player API's to bring back their true
 import { SuperVideoElement } from 'super-media-element';
 
 class MyVideoElement extends SuperVideoElement {
-  constructor() {
-    super();
-    this.loadStart();
-  }
 
-  attributeChangedCallback(attrName, oldValue, newValue) {
-    // This is required to come before the await for resolving loadComplete.
-    if (attrName === 'src' && newValue) {
-      this.load();
-      return;
+  static observedAttributes = ['color', ...SuperVideoElement.observedAttributes];
+
+  // Skip from forwarding the `src` attribute to the native element.
+  static skipAttributes = ['src'];
+
+
+  async attributeChangedCallback(attrName, oldValue, newValue) {
+    
+    if (attrName === 'color') {
+      this.api.color = newValue;
     }
 
     super.attributeChangedCallback(attrName, oldValue, newValue);
   }
 
   async load() {
-    // Kick off load & wait 1 tick to allow other attributes to be set.
-    await this.loadStart();
+    // This is called when the `src` changes.
+    
+    // Load a video player from a script here.
+    // Example: https://github.com/luwes/jwplayer-video-element/blob/main/jwplayer-video-element.js#L55-L75
 
-    // code to load a video element from a script
-    // example: https://github.com/luwes/jwplayer-video-element/blob/main/jwplayer-video-element.js#L55-L75
-
-    await this.loadEnd();
+    this.api = new VideoPlayer();
   }
 
   get nativeEl() {
