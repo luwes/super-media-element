@@ -1,3 +1,12 @@
+# [1.1.0](https://github.com/luwes/super-media-element/compare/v1.0.0...v1.1.0) (2023-04-08)
+
+
+### Features
+
+* default reflect video props & loadStart() ([7ca99d1](https://github.com/luwes/super-media-element/commit/7ca99d114e9fc495fa481db13ff00396f9fe9f14))
+
+
+
 # [1.0.0](https://github.com/luwes/super-media-element/compare/v0.4.2...v1.0.0) (2023-04-08)
 
 
