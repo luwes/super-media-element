@@ -1,3 +1,12 @@
+## [1.1.3](https://github.com/luwes/super-media-element/compare/v1.1.2...v1.1.3) (2023-04-09)
+
+
+### Bug Fixes
+
+* proper muted handling ([756a7db](https://github.com/luwes/super-media-element/commit/756a7dbc7d3d3d7777ef3bb503bdf9d65716c839))
+
+
+
 ## [1.1.2](https://github.com/luwes/super-media-element/compare/v1.1.1...v1.1.2) (2023-04-08)
 
 
