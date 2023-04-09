@@ -1,3 +1,12 @@
+## [1.2.1](https://github.com/luwes/super-media-element/compare/v1.2.0...v1.2.1) (2023-04-09)
+
+
+### Bug Fixes
+
+* handle unload too ([c1473dc](https://github.com/luwes/super-media-element/commit/c1473dc97d7bb72843bacb346d03dbca1aabd04b))
+
+
+
 # [1.2.0](https://github.com/luwes/super-media-element/compare/v1.1.3...v1.2.0) (2023-04-09)
 
 
