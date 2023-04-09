@@ -108,7 +108,9 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       if (this.#isDefined) return;
       this.#isDefined = true;
 
-      const observedAttributes = this.observedAttributes;
+      const propsToAttrs = new Set(this.observedAttributes);
+      // defaultMuted maps to the muted attribute, handled manually below.
+      propsToAttrs.delete('muted');
 
       // Passthrough native el functions from the custom el to the native el
       nativeElProps.forEach((prop) => {
@@ -139,7 +141,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
               this.#init();
 
               let attr = prop.toLowerCase();
-              if (observedAttributes.includes(attr)) {
+              if (propsToAttrs.has(attr)) {
                 const val = this.getAttribute(attr);
                 return val === null ? false : val === '' ? true : val;
               }
@@ -161,7 +163,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
               }
 
               let attr = prop.toLowerCase();
-              if (observedAttributes.includes(attr)) {
+              if (propsToAttrs.has(attr)) {
                 if (val === true || val === false || val == null) {
                   this.toggleAttribute(attr, Boolean(val));
                 } else {

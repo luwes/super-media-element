@@ -72,6 +72,17 @@ test('has default video reflecting props', async function (t) {
   t.ok(superVideo.nativeEl.hasAttribute('controls'), 'nativeEl has controls attribute');
 });
 
+test(`muted prop is set and doesn't reflect to muted attribute`, async function (t) {
+  const superVideo = await fixture(
+    `<super-video></super-video>`
+  );
+
+  superVideo.muted = true;
+
+  t.ok(superVideo.muted, 'has muted true');
+  t.ok(!superVideo.hasAttribute('muted'), 'has no muted attribute');
+});
+
 test('has a working muted attribute', async function (t) {
   const superVideo = window.superVideo;
 
