@@ -349,7 +349,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       this.#init();
 
       // Only call loadSrc when the super class has a load method.
-      if (attrName === 'src' && newValue && this.load !== SuperMedia.prototype.load) {
+      if (attrName === 'src' && this.load !== SuperMedia.prototype.load) {
         this.#loadSrc();
       }
 
