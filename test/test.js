@@ -1,15 +1,18 @@
 import { test } from 'zora';
+import { SuperVideoElement } from '../super-media-element.js';
 
-globalThis.SuperVideoElement = globalThis.customElements.get('super-video');
+if (!globalThis.customElements.get('super-video')) {
+  globalThis.customElements.define('super-video', SuperVideoElement);
+}
 
 test('is an instance of SuperVideoElement and HTMLElement', async function (t) {
   const superVideo = await fixture(`<super-video></super-video>`);
-  t.ok(superVideo instanceof globalThis.SuperVideoElement);
+  t.ok(superVideo instanceof SuperVideoElement);
   t.ok(superVideo instanceof HTMLElement);
 });
 
 test('uses attributes for getters if nativeEl is not ready yet', async function (t) {
-  class MyVideoElement extends globalThis.SuperVideoElement {
+  class MyVideoElement extends SuperVideoElement {
     async load() {
       // This shows that the video like API can be delayed for players like
       // YouTube, Vimeo, Wistia, any player that requires an async load.
@@ -84,6 +87,10 @@ test(`muted prop is set and doesn't reflect to muted attribute`, async function 
 });
 
 test('has a working muted attribute', async function (t) {
+  if (document.readyState === 'loading') {
+    await new Promise((resolve) => addEventListener('DOMContentLoaded', resolve));
+  }
+
   const superVideo = window.superVideo;
 
   t.ok(superVideo.hasAttribute('muted'), 'has muted attribute');
@@ -108,6 +115,10 @@ test('has a working muted attribute', async function (t) {
 });
 
 test('adds and removes tracks and sources', async function (t) {
+  if (document.readyState === 'loading') {
+    await new Promise((resolve) => addEventListener('DOMContentLoaded', resolve));
+  }
+
   const superVideo = window.superVideo;
 
   superVideo.innerHTML = `
