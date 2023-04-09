@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/luwes/super-media-element/compare/v1.1.3...v1.2.0) (2023-04-09)
+
+
+### Features
+
+* cleanup & remove default super-video|audio ([7edd8be](https://github.com/luwes/super-media-element/commit/7edd8be81b28b6373f10347abeda6fbe08e4e8d2))
+
+
+
 ## [1.1.3](https://github.com/luwes/super-media-element/compare/v1.1.2...v1.1.3) (2023-04-09)
 
 
