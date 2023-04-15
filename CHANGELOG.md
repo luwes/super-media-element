@@ -1,3 +1,12 @@
+## [1.2.3](https://github.com/luwes/super-media-element/compare/v1.2.2...v1.2.3) (2023-04-15)
+
+
+### Bug Fixes
+
+* query unnamed slot for source or track ([78e4936](https://github.com/luwes/super-media-element/commit/78e49367d2288a7e10dc5b8535e446e017049bc6))
+
+
+
 ## [1.2.2](https://github.com/luwes/super-media-element/compare/v1.2.1...v1.2.2) (2023-04-15)
 
 
