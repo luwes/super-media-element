@@ -270,7 +270,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       const childMap = new Map();
       // An unnamed <slot> will be filled with all of the custom element's
       // top-level child nodes that do not have the slot attribute.
-      const slotEl = this.shadowRoot.querySelector('slot');
+      const slotEl = this.shadowRoot.querySelector('slot:not([name])');
       slotEl?.addEventListener('slotchange', () => {
         const removeNativeChildren = new Map(childMap);
         slotEl
