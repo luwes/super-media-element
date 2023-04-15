@@ -154,13 +154,6 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
             config.set = async function (val) {
               this.#init();
 
-              if (this.set) {
-                if (this.loadComplete && !this.isLoaded) await this.loadComplete;
-
-                this.set(prop, val);
-                return;
-              }
-
               let attr = prop.toLowerCase();
               if (propsToAttrs.has(attr)) {
                 if (val === true || val === false || val == null) {
@@ -172,6 +165,12 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
               }
 
               if (this.loadComplete && !this.isLoaded) await this.loadComplete;
+
+              if (this.set) {
+                this.set(prop, val);
+                return;
+              }
+
               this.nativeEl[prop] = val;
             };
           }
