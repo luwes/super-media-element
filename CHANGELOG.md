@@ -1,3 +1,12 @@
+## [1.2.2](https://github.com/luwes/super-media-element/compare/v1.2.1...v1.2.2) (2023-04-15)
+
+
+### Bug Fixes
+
+* set method before attribute bug ([9e38b30](https://github.com/luwes/super-media-element/commit/9e38b3083cc3ff8f98c48058364547c9a039f211))
+
+
+
 ## [1.2.1](https://github.com/luwes/super-media-element/compare/v1.2.0...v1.2.1) (2023-04-09)
 
 
