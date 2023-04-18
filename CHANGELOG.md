@@ -1,3 +1,12 @@
+## [1.2.4](https://github.com/luwes/super-media-element/compare/v1.2.3...v1.2.4) (2023-04-18)
+
+
+### Bug Fixes
+
+* Next.js SSR document type error ([ba873dd](https://github.com/luwes/super-media-element/commit/ba873dd3f228469af716532728ca3447c8210777))
+
+
+
 ## [1.2.3](https://github.com/luwes/super-media-element/compare/v1.2.2...v1.2.3) (2023-04-15)
 
 
