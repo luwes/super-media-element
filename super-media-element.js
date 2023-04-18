@@ -55,7 +55,7 @@ const styles = `
   }
 `;
 
-const template = document?.createElement('template');
+const template = globalThis.document?.createElement('template');
 if (template) {
   template.innerHTML = `
   <style>
@@ -429,6 +429,6 @@ class PublicPromise extends Promise {
   }
 }
 
-export const SuperVideoElement = document && SuperMediaMixin(HTMLElement, { tag: 'video' });
+export const SuperVideoElement = globalThis.document ? SuperMediaMixin(HTMLElement, { tag: 'video' }) : class {};
 
-export const SuperAudioElement = document && SuperMediaMixin(HTMLElement, { tag: 'audio' });
+export const SuperAudioElement = globalThis.document ? SuperMediaMixin(HTMLElement, { tag: 'audio' }) : class {};
