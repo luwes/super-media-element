@@ -1,3 +1,12 @@
+## [1.2.5](https://github.com/luwes/super-media-element/compare/v1.2.4...v1.2.5) (2023-04-19)
+
+
+### Bug Fixes
+
+* muted for standin element ([bbebc1f](https://github.com/luwes/super-media-element/commit/bbebc1f991c3b48f2f39cd0114fdc14da582ca3b))
+
+
+
 ## [1.2.4](https://github.com/luwes/super-media-element/compare/v1.2.3...v1.2.4) (2023-04-18)
 
 
