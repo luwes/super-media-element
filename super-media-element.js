@@ -314,13 +314,20 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
     }
 
     #initStandinEl() {
+      // Neither Chrome or Firefox support setting the muted attribute
+      // after using document.createElement.
+      // Get around this by setting the muted property manually.
       const dummyEl = document.createElement(tag, { is });
-      for (let { name, value } of this.attributes)
+      dummyEl.muted = this.hasAttribute('muted');
+
+      for (let { name, value } of this.attributes) {
         dummyEl.setAttribute(name, value);
+      }
 
       this.#standinEl = {};
-      for (let name of getNativeElProps(dummyEl))
+      for (let name of getNativeElProps(dummyEl)) {
         this.#standinEl[name] = dummyEl[name];
+      }
 
       // unload dummy video element
       dummyEl.removeAttribute('src');
@@ -334,12 +341,11 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       if (!this.nativeEl) {
         // Neither Chrome or Firefox support setting the muted attribute
         // after using document.createElement.
-        // Get around this by building the native tag as a string.
-        const muted = this.hasAttribute('muted') ? ' muted' : '';
+        // Get around this by setting the muted property manually.
+        const nativeEl = document.createElement(tag, { is });
+        nativeEl.muted = this.hasAttribute('muted');
 
-        const tpl = document.createElement('template');
-        tpl.innerHTML = `<${tag}${is ? ` is="${is}"` : ''}${muted}></${tag}>`;
-        this.shadowRoot.append(tpl.content);
+        this.shadowRoot.append(nativeEl);
       }
     }
 
