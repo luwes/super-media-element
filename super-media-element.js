@@ -10,7 +10,7 @@
 
 // The onevent like props are weirdly set on the HTMLElement prototype with other
 // generic events making it impossible to pick these specific to HTMLMediaElement.
-const Events = [
+export const Events = [
   'abort',
   'canplay',
   'canplaythrough',
@@ -38,30 +38,30 @@ const Events = [
   'resize',
   'enterpictureinpicture',
   'leavepictureinpicture',
+  'webkitbeginfullscreen',
+  'webkitendfullscreen',
+  'webkitpresentationmodechanged',
 ];
 
-const styles = `
-  :host {
-    display: inline-block;
-    line-height: 0;
-  }
+export const template = globalThis.document?.createElement('template');
 
-  video,
-  audio {
-    max-width: 100%;
-    max-height: 100%;
-    min-width: 100%;
-    min-height: 100%;
-  }
-`;
-
-const template = globalThis.document?.createElement('template');
 if (template) {
-  template.innerHTML = `
-  <style>
-    ${styles}
-  </style>
-  <slot></slot>
+  template.innerHTML = /*html*/`
+    <style>
+      :host {
+        display: inline-block;
+        line-height: 0;
+      }
+
+      video,
+      audio {
+        max-width: 100%;
+        max-height: 100%;
+        min-width: 100%;
+        min-height: 100%;
+      }
+    </style>
+    <slot></slot>
   `;
 }
 
@@ -70,8 +70,8 @@ if (template) {
  */
 export const SuperMediaMixin = (superclass, { tag, is }) => {
 
-  const nativeElTest = document.createElement(tag, { is });
-  const nativeElProps = getNativeElProps(nativeElTest);
+  const nativeElTest = globalThis.document?.createElement(tag, { is });
+  const nativeElProps = nativeElTest ? getNativeElProps(nativeElTest) : [];
 
   return class SuperMedia extends superclass {
     static Events = Events;
@@ -83,10 +83,10 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
       SuperMedia.#define();
 
       // Include any attributes from the custom built-in.
-      const natAttrs = Object.getPrototypeOf(nativeElTest).observedAttributes;
+      const natAttrs = nativeElTest?.constructor?.observedAttributes ?? [];
 
       return [
-        ...(natAttrs ?? []),
+        ...natAttrs,
         'autopictureinpicture',
         'disablepictureinpicture',
         'disableremoteplayback',
@@ -249,7 +249,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
     }
 
     get preload() {
-      return this.getAttribute('preload') ?? 'metadata';
+      return this.getAttribute('preload') ?? this.nativeEl?.preload;
     }
 
     set preload(val) {
@@ -293,7 +293,7 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
 
       // The video events are dispatched on the SuperMediaElement instance.
       // This makes it possible to add event listeners before the element is upgraded.
-      for (let type of Events) {
+      for (let type of this.constructor.Events) {
         this.shadowRoot.addEventListener?.(type, (evt) => {
           if (evt.target !== this.nativeEl) return;
           this.dispatchEvent(new CustomEvent(evt.type, { detail: evt.detail }));
@@ -339,14 +339,15 @@ export const SuperMediaMixin = (superclass, { tag, is }) => {
 
       // If there is no nativeEl by now, create it our bloody selves.
       if (!this.nativeEl) {
-        // Neither Chrome or Firefox support setting the muted attribute
-        // after using document.createElement.
-        // Get around this by setting the muted property manually.
         const nativeEl = document.createElement(tag, { is });
-        nativeEl.muted = this.hasAttribute('muted');
-
+        nativeEl.part = tag;
         this.shadowRoot.append(nativeEl);
       }
+
+      // Neither Chrome or Firefox support setting the muted attribute
+      // after using document.createElement.
+      // Get around this by setting the muted property manually.
+      this.nativeEl.muted = this.hasAttribute('muted');
     }
 
     attributeChangedCallback(attrName, oldValue, newValue) {

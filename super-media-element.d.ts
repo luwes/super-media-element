@@ -1,7 +1,7 @@
 
-type Constructor = new (...args: any[]) => {};
+export const Events: string[];
 
-export function SuperMediaMixin<TBase extends Constructor>(Base: TBase): any;
+export const template: HTMLTemplateElement;
 
 export class SuperAudioElement extends HTMLAudioElement implements HTMLAudioElement {
   static readonly observedAttributes: string[];
@@ -22,3 +22,16 @@ export class SuperVideoElement extends HTMLVideoElement implements HTMLVideoElem
   connectedCallback(): void;
   disconnectedCallback(): void;
 }
+
+type SuperMediaElementConstructor<K> = {
+  readonly observedAttributes: string[];
+  Events: string[];
+  template: HTMLTemplateElement;
+  new(): K
+};
+
+export function SuperMediaMixin(Base: any, options: { tag: 'video', is: string }):
+  SuperMediaElementConstructor<SuperVideoElement>;
+
+export function SuperMediaMixin(Base: any, options: { tag: 'audio', is: string }):
+  SuperMediaElementConstructor<SuperAudioElement>;
